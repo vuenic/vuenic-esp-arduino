@@ -5,7 +5,7 @@ VuenicWifiHTTP::VuenicWifiHTTP(String apiKey) {
 }
 
 // String Value
-void VuenicESP8266HTTP::add(int key, String value) {
+void VuenicWifiHTTP::add(int key, String value) {
     DynamicJsonDocument doc(256);
     deserializeJson(doc, jsonString);    
     doc[String(key)] = value;
@@ -15,7 +15,7 @@ void VuenicESP8266HTTP::add(int key, String value) {
 }
 
 // Integer Value
-void VuenicESP8266HTTP::add(int key, int value) {
+void VuenicWifiHTTP::add(int key, int value) {
     DynamicJsonDocument doc(256);
     deserializeJson(doc, jsonString);    
     doc[String(key)] = value;
@@ -25,7 +25,7 @@ void VuenicESP8266HTTP::add(int key, int value) {
 }
 
 // Float Value
-void VuenicESP8266HTTP::add(int key, float value) {
+void VuenicWifiHTTP::add(int key, float value) {
     DynamicJsonDocument doc(256);
     deserializeJson(doc, jsonString);    
     doc[String(key)] = value;
@@ -35,7 +35,7 @@ void VuenicESP8266HTTP::add(int key, float value) {
 }
 
 // Double Value
-void VuenicESP8266HTTP::add(int key, double value) {
+void VuenicWifiHTTP::add(int key, double value) {
     DynamicJsonDocument doc(256);
     deserializeJson(doc, jsonString);    
     doc[String(key)] = value;
@@ -76,6 +76,27 @@ bool VuenicWifiHTTP::wifiConnection(String wifiSSID, String wifiPassword) {
     Serial.println("WiFi Connected!");
     Serial.println("IP Address: " + ipToString(WiFi.localIP()));
     return true;
+}
+
+String VuenicWifiHTTP::send(){
+    WiFiEspClient client; 
+    HttpClient http = HttpClient(client, _server, _port);
+	Serial.println("[Vuenic HTTP] Request " + jsonString);
+    http.beginRequest();
+    http.post(_path);
+    http.sendHeader("Content-Type", "application/json");
+    http.sendHeader("Content-Length", String(jsonString.length()));
+    http.sendHeader("Authorization", _apiKey);
+    http.beginBody();
+    http.print(jsonString);
+    http.endRequest();
+
+    int statusCode = http.responseStatusCode();
+    String response = http.responseBody();
+    Serial.println("Status code: " + String(statusCode));
+    Serial.println("Response: " + response);
+    client.stop();
+    return String(statusCode);
 }
 
 String VuenicWifiHTTP::ipToString(IPAddress ip){
