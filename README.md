@@ -1,4 +1,4 @@
-# Dokumentasi Integrasi Vuenic Wifi Arduino
+# Integrasi Vuenic Wifi Arduino
 
 Nama Sensor         | Tipe Data Sensor  | Kode Sensor (int)     | 
 --------------------|-------------------| ----------------------|
