@@ -5,7 +5,7 @@
 #define WIFISSID "your-wifi-ssid"
 #define WIFIPASSWORD "your-wifi-password"
 
-VuenicESP32HTTP vuenic(APIKEY);
+VuenicWifiHTTP vuenic(APIKEY);
 SoftwareSerial Serial1(6, 7); // RX, TX
 
 void setup() {
